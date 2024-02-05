@@ -1,34 +1,43 @@
 // create web server
-import { Router } from 'express';
-const router = Router();
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const url = require('url');
+const qs = require('querystring');
+const comments = [];
 
-import Comment, { find } from '../models/Comment';
-
-// create comment
-router.post('/:postId', async (req, res) => {
-    const postId = req.params.postId;
-    const comment = new Comment({
-        postId: postId,
-        name: req.body.name,
-        content: req.body.content
+// create web server
+http.createServer((req, res) => {
+  // parse url and get pathname
+  const pathname = url.parse(req.url).pathname;
+  if (pathname === '/') {
+    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end(err);
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
     });
-    try {
-        const savedComment = await comment.save();
-        res.json(savedComment);
-    } catch (err) {
-        res.json({ message: err });
-    }
-});
-
-// get comments
-router.get('/:postId', async (req, res) => {
-    try {
-        const postId = req.params.postId;
-        const comments = await find({ postId: postId });
-        res.json(comments);
-    } catch (err) {
-        res.json({ message: err });
-    }
-});
-
-export default router;
+  } else if (pathname === '/comment') {
+    // get comment
+    let comment = '';
+    req.on('data', (chunk) => {
+      comment += chunk;
+    });
+    req.on('end', () => {
+      comment = qs.parse(comment).comment;
+      comments.push(comment);
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end('comment is saved');
+    });
+  } else if (pathname === '/getComments') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end(comments.join());
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('404 Not Found');
+  }
+}).listen(3000, () => {
+  console.log('Server is running at http://
