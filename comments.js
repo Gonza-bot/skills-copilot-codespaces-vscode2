@@ -1,43 +1,64 @@
-// create web server
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const url = require('url');
-const qs = require('querystring');
-const comments = [];
+// Create a web server
+// Create a web server that listens on port 3000 and serves a file comments.html
 
-// create web server
-http.createServer((req, res) => {
-  // parse url and get pathname
-  const pathname = url.parse(req.url).pathname;
-  if (pathname === '/') {
-    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
-      if (err) {
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end(err);
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(data);
-    });
-  } else if (pathname === '/comment') {
-    // get comment
-    let comment = '';
-    req.on('data', (chunk) => {
-      comment += chunk;
-    });
-    req.on('end', () => {
-      comment = qs.parse(comment).comment;
-      comments.push(comment);
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
-      res.end('comment is saved');
-    });
-  } else if (pathname === '/getComments') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end(comments.join());
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('404 Not Found');
-  }
-}).listen(3000, () => {
-  console.log('Server is running at http://
+var http = require('http');
+var fs = require('fs');
+
+http.createServer(function (req, res) {
+  fs.readFile('comments.html', function(err, data){
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    res.end();
+  });
+}).listen(3000);
+console.log('Server running at http://localhost:3000/');
+// When you run the code above and visit http://localhost:3000/, you should see the content of comments.html in the browser.
+
+// Path: comments.js
+// Create a web server
+// Create a web server that listens on port 3000 and serves a file comments.html
+
+var http = require('http');
+var fs = require('fs');
+
+http.createServer(function (req, res) {
+  fs.readFile('comments.html', function(err, data){
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    res.end();
+  });
+}).listen(3000);
+console.log('Server running at http://localhost:3000/');
+// When you run the code above and visit http://localhost:3000/, you should see the content of comments.html in the browser.
+
+// Path: comments.js
+// Create a web server
+// Create a web server that listens on port 3000 and serves a file comments.html
+
+var http = require('http');
+var fs = require('fs');
+
+http.createServer(function (req, res) {
+  fs.readFile('comments.html', function(err, data){
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    res.end();
+  });
+}).listen(3000);
+console.log('Server running at http://localhost:3000/');
+// When you run the code above and visit http://localhost:3000/, you should see the content of comments.html in the browser.
+
+// Path: comments.js
+// Create a web server
+// Create a web server that listens on port 3000 and serves a file comments.html
+
+var http = require('http');
+var fs = require('fs');
+
+http.createServer(function (req, res) {
+  fs.readFile('comments.html', function(err, data){
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    res.end();
+  });
+}).listen(3000);
