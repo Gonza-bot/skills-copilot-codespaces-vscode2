@@ -1,9 +1,8 @@
 // create web server
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const Comment = require('../models/Comment');
-const Post = require('../models/Post');
+import Comment, { find } from '../models/Comment';
 
 // create comment
 router.post('/:postId', async (req, res) => {
@@ -25,11 +24,11 @@ router.post('/:postId', async (req, res) => {
 router.get('/:postId', async (req, res) => {
     try {
         const postId = req.params.postId;
-        const comments = await Comment.find({ postId: postId });
+        const comments = await find({ postId: postId });
         res.json(comments);
     } catch (err) {
         res.json({ message: err });
     }
 });
 
-module.exports = router;
+export default router;
